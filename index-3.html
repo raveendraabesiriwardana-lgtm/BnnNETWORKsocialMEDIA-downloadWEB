@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BEE DOWNLOADER — Download Any Video. Instantly.</title>
+<meta name="description" content="Download videos and audio from YouTube, TikTok, Facebook, Instagram, Twitter/X, and 20+ more platforms. HD quality, no watermarks, MP3 support.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a0c;
+    --card:#0e0e11;
+    --red:#ef233c;
+    --blue:#3a86ff;
+    --grad: linear-gradient(90deg, var(--red), var(--blue));
+    --text:#f2f2f4;
+    --muted:#9aa0ab;
+    --border: rgba(239,35,60,0.35);
+    --border-blue: rgba(58,134,255,0.35);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{font-family:'Sora', sans-serif;}
+  .wrap{max-width:960px; margin:0 auto; padding:0 24px;}
+
+  /* Header */
+  header{padding:24px; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; border-bottom:1px solid rgba(255,255,255,0.06);}
+  .logo{font-size:1.9rem; font-weight:800;}
+  .logo span{color:var(--red);}
+  .badge{display:inline-block; margin-top:10px; padding:6px 16px; border:1px solid var(--border); border-radius:999px; color:#f88; font-size:0.78rem; font-weight:600; letter-spacing:0.03em;}
+  .pill-btn{padding:10px 20px; border:1px solid var(--border); border-radius:999px; color:#f88; font-weight:600; font-size:0.85rem; background:rgba(239,35,60,0.06); white-space:nowrap;}
+
+  /* Hero */
+  .hero{padding:56px 24px 32px; text-align:left;}
+  .hero h1{font-size:2.5rem; font-weight:800; line-height:1.15; letter-spacing:-0.02em;}
+  .hero h1 .grad{background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .hero p.sub{margin-top:16px; color:var(--muted); font-size:1rem; max-width:520px;}
+
+  /* Download box */
+  .box{
+    margin:32px auto 0; max-width:960px; border:1px solid var(--border);
+    border-radius:24px; padding:28px; background:radial-gradient(circle at top left, rgba(239,35,60,0.05), transparent 60%);
+  }
+  .box input[type=text]{
+    width:100%; padding:16px 20px; border-radius:999px; border:1px solid rgba(255,255,255,0.12);
+    background:#101013; color:var(--text); font-size:0.95rem; outline:none;
+  }
+  .box input[type=text]:focus{border-color:var(--border-blue);}
+  .box input[type=text]::placeholder{color:#6b7280;}
+  .dl-btn{
+    display:block; width:100%; margin-top:16px; padding:16px; border:none; border-radius:999px;
+    background:var(--grad); color:#fff; font-weight:700; font-size:1rem; cursor:pointer; letter-spacing:0.02em;
+    transition:transform .15s ease, opacity .15s ease;
+  }
+  .dl-btn:hover{transform:translateY(-1px);}
+  .dl-btn:disabled{opacity:0.6; cursor:progress;}
+  .platform-row{display:flex; gap:12px; flex-wrap:wrap; margin-top:20px; justify-content:center;}
+  .platform-chip{
+    display:flex; align-items:center; gap:8px; padding:10px 18px; border-radius:999px;
+    border:1px solid var(--border-blue); font-size:0.85rem; color:#cfe0ff; background:rgba(58,134,255,0.06);
+  }
+  .supports-note{margin-top:16px; text-align:center; color:var(--muted); font-size:0.82rem;}
+
+  /* Result area */
+  #result{margin-top:20px;}
+  .result-card{border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:16px; background:#111114; margin-top:12px;}
+  .result-card a.linkbtn{
+    display:inline-block; margin-top:8px; margin-right:8px; padding:10px 18px; border-radius:999px;
+    background:var(--grad); color:#fff; text-decoration:none; font-weight:600; font-size:0.85rem;
+  }
+  .error-card{border:1px solid rgba(239,35,60,0.5); background:rgba(239,35,60,0.06); border-radius:16px; padding:16px; color:#ffb3bd; font-size:0.9rem;}
+  .status{color:var(--muted); font-size:0.9rem; margin-top:12px;}
+
+  /* Stats */
+  .stats{display:grid; grid-template-columns:1fr 1fr; gap:16px; padding:40px 24px 8px; max-width:960px; margin:0 auto;}
+  .stat{border-left:3px solid var(--red); border-radius:14px; background:var(--card); padding:22px; text-align:center;}
+  .stat .num{font-family:'Sora'; font-size:2rem; font-weight:800; background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .stat .lbl{color:var(--muted); font-size:0.8rem; letter-spacing:0.08em; text-transform:uppercase; margin-top:4px;}
+
+  /* Section titles */
+  .section-title{display:flex; align-items:center; gap:14px; padding:48px 24px 20px; max-width:960px; margin:0 auto;}
+  .section-title .bar{width:4px; height:34px; background:var(--red); border-radius:2px;}
+  .section-title h2{font-size:1.6rem; font-weight:800;}
+
+  /* Feature cards */
+  .features{display:grid; gap:16px; padding:0 24px; max-width:960px; margin:0 auto;}
+  .feature-card{border:1px solid var(--border); border-radius:18px; padding:22px; background:var(--card);}
+  .feature-card .icon{font-size:1.5rem;}
+  .feature-card h3{margin-top:10px; font-size:1.1rem; font-weight:700;}
+  .feature-card p{margin-top:8px; color:var(--muted); font-size:0.9rem;}
+
+  /* Steps */
+  .steps{display:grid; gap:16px; padding:0 24px; max-width:960px; margin:0 auto;}
+  .step-card{border:1px solid var(--border-blue); border-radius:18px; padding:26px; text-align:center; background:var(--card);}
+  .step-card .n{font-size:2.2rem; font-weight:800; color:var(--red);}
+  .step-card h3{margin-top:8px; font-size:1.1rem;}
+  .step-card p{margin-top:8px; color:var(--muted); font-size:0.88rem;}
+
+  /* All-platforms grid */
+  .plat-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:10px; padding:0 24px; max-width:960px; margin:0 auto;}
+  .plat-tile{border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:14px 10px; text-align:center; background:var(--card); font-size:0.82rem; color:#d1d5db;}
+  .plat-tile .em{font-size:1.3rem; display:block; margin-bottom:4px;}
+
+  /* FAQ */
+  .faq{padding:0 24px; max-width:960px; margin:0 auto;}
+  details{border-bottom:1px solid rgba(255,255,255,0.08); padding:18px 4px;}
+  summary{cursor:pointer; font-weight:600; list-style:none; display:flex; justify-content:space-between; align-items:center;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+"; color:var(--red); font-size:1.3rem; font-weight:800;}
+  details[open] summary::after{content:"–";}
+  details p{margin-top:12px; color:var(--muted); font-size:0.9rem;}
+
+  footer{text-align:center; padding:40px 24px 60px; color:var(--muted); font-size:0.85rem; margin-top:20px; border-top:1px solid rgba(255,255,255,0.06);}
+  footer .name{color:var(--red); font-weight:700;}
+
+  @media(min-width:640px){
+    .hero h1{font-size:3.4rem;}
+    .stats{grid-template-columns:repeat(4,1fr);}
+    .features{grid-template-columns:repeat(3,1fr);}
+    .steps{grid-template-columns:repeat(3,1fr);}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">BEE <span>DOWNLOADER</span></div>
+    <div class="badge">PRO · FAST API</div>
+  </div>
+  <div class="pill-btn">DOWNLOADER</div>
+</header>
+
+<section class="hero wrap">
+  <h1>Download Any Video. <span class="grad">Instantly.</span></h1>
+  <p class="sub">HD quality · No watermarks · MP3 support · 25+ platforms supported</p>
+</section>
+
+<div class="box wrap">
+  <input type="text" id="urlInput" placeholder="Paste a video link from YouTube, TikTok, Instagram, X, Facebook...">
+  <button class="dl-btn" id="dlBtn" onclick="handleDownload()">↓ DOWNLOAD</button>
+
+  <div class="platform-row">
+    <span class="platform-chip">▶️ YouTube</span>
+    <span class="platform-chip">🎵 TikTok</span>
+    <span class="platform-chip">📘 Facebook</span>
+    <span class="platform-chip">📸 Instagram</span>
+    <span class="platform-chip">🐦 X / Twitter</span>
+    <span class="platform-chip">➕ 20 more</span>
+  </div>
+  <p class="supports-note">Supports 1080p, 720p, 480p, 360p & MP3 extraction</p>
+
+  <div id="result"></div>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="num">25+</div><div class="lbl">Platforms</div></div>
+  <div class="stat"><div class="num">HD</div><div class="lbl">Quality</div></div>
+  <div class="stat"><div class="num">MP3</div><div class="lbl">Audio</div></div>
+  <div class="stat"><div class="num">FREE</div><div class="lbl">Always</div></div>
+</div>
+
+<div class="section-title"><div class="bar"></div><h2>⚡ Why Bee Downloader?</h2></div>
+<div class="features">
+  <div class="feature-card"><div class="icon">⚡</div><h3>Lightning Fast</h3><p>Instant API response. No delays or waiting rooms.</p></div>
+  <div class="feature-card"><div class="icon">🎥</div><h3>HD Quality</h3><p>1080p, 720p, 480p, 360p — every available format shown at once.</p></div>
+  <div class="feature-card"><div class="icon">🎵</div><h3>MP3 Audio</h3><p>Extract audio from any video. Perfect for music.</p></div>
+  <div class="feature-card"><div class="icon">🚫</div><h3>No Watermark</h3><p>Clean downloads. No logos, no branding added.</p></div>
+  <div class="feature-card"><div class="icon">💿</div><h3>All Formats</h3><p>Every available quality displayed — pick what you want.</p></div>
+  <div class="feature-card"><div class="icon">🌐</div><h3>25+ Platforms</h3><p>YouTube, TikTok, Instagram, X, Facebook, Reddit, SoundCloud & more.</p></div>
+</div>
+
+<div class="section-title"><div class="bar"></div><h2>📌 How It Works</h2></div>
+<div class="steps">
+  <div class="step-card"><div class="n">01</div><h3>Copy URL</h3><p>Copy the video link from any supported platform.</p></div>
+  <div class="step-card"><div class="n">02</div><h3>Paste &amp; Click</h3><p>Paste the URL into Bee Downloader and click Download.</p></div>
+  <div class="step-card"><div class="n">03</div><h3>Choose Format</h3><p>Pick HD, SD, or MP3 and download instantly.</p></div>
+</div>
+
+<div class="section-title"><div class="bar"></div><h2>🌍 Supported Platforms</h2></div>
+<div class="plat-grid" id="platGrid"></div>
+
+<div class="section-title"><div class="bar"></div><h2>❓ FAQ · Common Questions</h2></div>
+<div class="faq">
+  <details>
+    <summary>How do I download a video with Bee Downloader?</summary>
+    <p>Copy the video link from any supported platform, paste it into the box above, then tap Download and choose your preferred quality or MP3.</p>
+  </details>
+  <details>
+    <summary>Is Bee Downloader free?</summary>
+    <p>Yes — Bee Downloader is completely free to use, with no hidden fees or sign-up required.</p>
+  </details>
+  <details>
+    <summary>Can I download TikTok videos without a watermark?</summary>
+    <p>Yes, TikTok downloads are provided in their clean, original form without added watermarks or branding.</p>
+  </details>
+  <details>
+    <summary>Can I convert a video to MP3?</summary>
+    <p>Yes — select the MP3 option after pasting your link to extract just the audio track.</p>
+  </details>
+  <details>
+    <summary>Which platforms are supported?</summary>
+    <p>YouTube, TikTok, Instagram, Facebook, X (Twitter), Reddit, SoundCloud, Twitch clips, Vimeo, Pinterest, Tumblr, and more — see the full list above.</p>
+  </details>
+</div>
+
+<footer>
+  BEE DOWNLOADER © 2026 · Created by <span class="name">bee</span><br>
+  For personal use only · Respect content creators
+</footer>
+
+<script>
+// ---------------------------------------------------------------
+// CONFIG: this points at a public multi-platform extraction API
+// (a "cobalt"-style instance). Swap API_BASE for your own
+// self-hosted instance if the public one is rate-limited or down.
+// See the README for self-hosting instructions.
+// ---------------------------------------------------------------
+const API_BASE = "https://api.cobalt.tools/api/json";
+
+const PLATFORMS = [
+  ["▶️","YouTube"], ["🎵","TikTok"], ["📘","Facebook"], ["📸","Instagram"],
+  ["🐦","X / Twitter"], ["👽","Reddit"], ["🎧","SoundCloud"], ["🟣","Twitch"],
+  ["🎬","Vimeo"], ["📌","Pinterest"], ["📓","Tumblr"], ["🔵","VK"],
+  ["📺","Streamable"], ["🀄","Bilibili"], ["🎥","Loom"], ["🦋","Bluesky"],
+  ["👻","Snapchat"], ["📷","Flickr"], ["🎮","IGN"], ["📰","9GAG"],
+  ["🎙️","Bandcamp"], ["🧵","Threads"], ["🎞️","Dailymotion"], ["🖼️","Imgur"],
+  ["🌀","Rumble"]
+];
+
+const grid = document.getElementById("platGrid");
+PLATFORMS.forEach(([em, name]) => {
+  const div = document.createElement("div");
+  div.className = "plat-tile";
+  div.innerHTML = `<span class="em">${em}</span>${name}`;
+  grid.appendChild(div);
+});
+
+async function handleDownload(){
+  const input = document.getElementById("urlInput");
+  const btn = document.getElementById("dlBtn");
+  const result = document.getElementById("result");
+  const url = input.value.trim();
+
+  result.innerHTML = "";
+  if(!url){
+    result.innerHTML = `<div class="error-card">Paste a video link first.</div>`;
+    return;
+  }
+  try{ new URL(url); } catch{
+    result.innerHTML = `<div class="error-card">That doesn't look like a valid URL.</div>`;
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "Fetching...";
+  result.innerHTML = `<p class="status">Talking to the extraction API…</p>`;
+
+  try{
+    const res = await fetch(API_BASE, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify({ url })
+    });
+
+    if(!res.ok) throw new Error(`API returned ${res.status}`);
+    const data = await res.json();
+
+    if(data.url){
+      result.innerHTML = `
+        <div class="result-card">
+          <strong>Ready!</strong>
+          <div><a class="linkbtn" href="${data.url}" target="_blank" rel="noopener">⬇ Download</a></div>
+        </div>`;
+    } else if(data.picker && Array.isArray(data.picker)){
+      let links = data.picker.map((p,i) =>
+        `<a class="linkbtn" href="${p.url}" target="_blank" rel="noopener">Option ${i+1}</a>`
+      ).join("");
+      result.innerHTML = `<div class="result-card"><strong>Choose a version:</strong><div>${links}</div></div>`;
+    } else {
+      throw new Error(data.text || "No downloadable link returned.");
+    }
+  } catch(err){
+    result.innerHTML = `
+      <div class="error-card">
+        <strong>Couldn't fetch that link.</strong><br>
+        ${err.message}<br><br>
+        The public extraction API may be rate-limited, blocked by CORS, or the
+        platform isn't supported. See the README for how to point this at your
+        own self-hosted API instance.
+      </div>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "↓ DOWNLOAD";
+  }
+}
+</script>
+</body>
+</html>
