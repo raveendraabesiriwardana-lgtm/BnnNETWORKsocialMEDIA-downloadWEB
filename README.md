@@ -4,12 +4,18 @@ A static, single-page video/audio downloader UI (YouTube, TikTok, Facebook, Inst
 
 ## ⚠️ Important — read this first
 
-GitHub Pages only serves static files (HTML/CSS/JS). It **cannot run a server**, so it cannot itself extract video links from YouTube/TikTok/etc. The page in this repo calls a **public third-party extraction API** (`api.cobalt.tools`, an open-source project) to do that work.
+GitHub Pages only serves static files (HTML/CSS/JS). It **cannot run a server**, so it cannot itself extract video links from YouTube/TikTok/etc.
 
-This means:
-- **It will only work as long as that public API is up and allows requests from your domain.** Public instances often rate-limit or block browser (CORS) requests from random sites — if that happens, downloads will fail with an error message on the page (this is handled gracefully, not a crash).
-- **"25+ platforms"** reflects what a cobalt-style API realistically supports today — YouTube, TikTok, Instagram, Facebook, X/Twitter, Reddit, SoundCloud, Twitch clips, Vimeo, Pinterest, Tumblr, VK, Bilibili, and others. No free API genuinely covers "100+" sites reliably.
-- For a **reliable** version, self-host your own cobalt API instance (it's free, open-source, deploy on Render/Fly.io/a VPS) and point `API_BASE` in `index.html` at your own URL. Instructions: https://github.com/imputnet/cobalt
+This site works by:
+1. Fetching a **live list** of community-run [cobalt](https://github.com/imputnet/cobalt) instances from `cobalt.directory`, filtered to whichever ones currently report working support for the platform you pasted a link from.
+2. Trying each candidate instance in turn (POST request) until one returns a working download link.
+
+Note: `api.cobalt.tools` (the *official* public instance) deliberately blocks requests from other websites as bot protection, so this site can't use it directly — that's why it goes through the community instance directory instead.
+
+**Realistic expectations:**
+- This is the most reliable *free, no-backend* setup available, but it is still **not guaranteed to work 100% of the time**. Community instances are run by volunteers and can go offline, get rate-limited, or lose YouTube access when platforms tighten anti-scraping measures — this happens periodically to the whole cobalt ecosystem, not just this site.
+- **"25+ platforms"** reflects what's realistically supported — YouTube, TikTok, Instagram, Facebook, X/Twitter, Reddit, SoundCloud, Twitch clips, Vimeo, Pinterest, Tumblr, VK, Bilibili, and others. No free option genuinely covers "100+" sites reliably.
+- For **guaranteed uptime**, self-host your own cobalt instance (free, open-source, deployable on Render/Fly.io/Railway/a VPS) and set it as the first candidate the app tries. Instructions: https://github.com/imputnet/cobalt/blob/main/docs/run-an-instance.md
 
 ## Deploy to GitHub Pages (free)
 
